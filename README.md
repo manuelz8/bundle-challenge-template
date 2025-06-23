@@ -6,7 +6,7 @@
 ## Full brief
 
 Find the detailed briefing, evaluation criteria, and mock-ups on Notion:  
-🔗 **[Link to the exercise](https://www.notion.so/tu-link-aqui)**
+🔗 **[Link to the exercise]([https://www.notion.so/tu-link-aqui](https://www.notion.so/dtc-pages/Technical-Challenge-Dynamic-Product-Bundle-10-OFF-215075df3d7980809acddb8a95d6db91?source=copy_link))**
 
 ---
 
