@@ -54,6 +54,12 @@
           "settings": {
             "share_label": "Share"
           }
+        },
+        "product_bundle_kMhJ4Q": {
+          "type": "product_bundle",
+          "settings": {
+            "product": "arena-caps-silicone"
+          }
         }
       },
       "block_order": [
@@ -64,15 +70,16 @@
         "quantity_selector",
         "buy_buttons",
         "description",
-        "share"
+        "share",
+        "product_bundle_kMhJ4Q"
       ],
       "settings": {
         "enable_sticky_info": true,
         "color_scheme": "scheme-1",
-        "media_size": "large",
+        "media_size": "medium",
         "constrain_to_viewport": true,
         "media_fit": "contain",
-        "gallery_layout": "stacked",
+        "gallery_layout": "thumbnail",
         "mobile_thumbnails": "hide",
         "media_position": "left",
         "image_zoom": "lightbox",
