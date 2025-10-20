@@ -1,43 +1,44 @@
-> **This repository is provided **exclusively** for the technical assessment.**  
-> Once the hiring process is complete, all of its contents may be deleted.
+<h1>Live Preview URL</h1>
 
----
+Please use this link to test the Web Component functionality on the development theme:
 
-## Full brief
+https://cr4ftcode.myshopify.com/
+Password: test
 
-Find the detailed briefing, evaluation criteria, and mock-ups on Notion:  
-🔗 **[Link to the exercise](https://www.notion.so/dtc-pages/Technical-Challenge-Dynamic-Product-Bundle-10-OFF-215075df3d7980809acddb8a95d6db91?source=copy_link)**
+<h2>Required Pull Requests (Code Review)</h2>
 
----
+The entire backend is centralized in the private repository (bundle-function) as requested. Two separate PRs were opened for independent review:
 
-## How to participate
+https://github.com/manuelz8/bundle-challenge/pull/2
+https://github.com/manuelz8/bundle-challenge/pull/1
 
-1. **Create a Shopify Partners account** (free) and set up a development store—this is where you’ll preview your work.  
-2. **Fork this repository** to your personal account or organization (**Fork → Create a fork**).  
-3. Work in your fork; we recommend a branch named `feature/solution`.  
-4. **When you’re done**, open a **Pull Request (PR)** from your branch to `main` in *your own fork*.  
-   - Leave the PR **open and unmerged** so we can review commits, diffs, and comments.  
-   - In the PR **description**, paste the **theme preview link** (e.g. `https://your-dev-store.myshopify.com/?preview_theme_id=123456789`) so we can test the bundle live.  
-5. Invite `@hemnys` as a *reviewer* or *collaborator* so we have access to your PR.
+<h2>Setup and Rollback Instructions</h2>
+<h3>Setup Steps</h3>
 
-### Shopify Functions & Checkout UI Extensions
+1- Install Shopify CLI: Ensure you have the latest version of the Shopify CLI installed locally.
 
-| What you must do | Why |
-|------------------|-----|
-| **Create one additional private repository** under your account (e.g. `bundle-backend`). | Keeps code that may require secrets or CI isolated from the theme fork. |
-| In that repo, place **both components**:<br>• `bundle-function` (CartTransform)<br>• `bundle-checkout-extension` (UI Extension) | Centralises backend code while remaining separate from storefront assets. |
-| **Open a dedicated PR to `main` for each component** (two PRs total). | Allows us to review Function and Extension independently. |
-| Add **direct links** to those PRs in the README of your fork. | Fast navigation for the evaluation team. |
+<h3>Theme Setup (Frontend):</h3>
 
-> **Functions or Extensions delivered without their own PRs will not be accepted.**
+Pull the feature/review-frontend branch.
 
----
+Run shopify theme dev to start the local preview.
 
-## Minimal best practices
+Add the Bundle Block: Navigate to the Product Page in the Theme Editor. Add a new block of type "Product Bundle" just below the Add to Cart button, and select a product to feature in the bundle settings.
 
-- Small, descriptive commits.  
-- A clear README with local setup, Shopify CLI commands, and test steps.  
+<h3>Backend Deployment & Installation:</h3>
 
----
+From the private bundle-function repository, run shopify app deploy.
 
-Good luck with the challenge!
+Install App: The CLI will provide a link to install the bundle-function app on the development store. This step is mandatory to activate the extensions.
+
+The function was successfully enabled by running the cartTransformCreate mutation directly in GraphiQL (using the functionHandle).
+
+Activation (UI Extension): Add the bundle-checkout-extension block to the Checkout Customizer to view the banner.
+
+<h2>Rollback Plan</h2>
+
+To fully remove the solution:
+
+Backend: Uninstall the bundle-function app from the Shopify Admin.
+
+Frontend: Remove the "Product Bundle" block from the product page in the Theme Editor.
