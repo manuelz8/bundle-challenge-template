@@ -1,0 +1,271 @@
+<style>
+     .product-bundle-item{
+              display: flex;
+              gap: 40px;
+          }
+
+          .product-bundle-item__gallery{
+              max-width: 150px;
+              width: 100%;
+              overflow: hidden;
+              position: relative;
+              height: 100%;
+          }
+
+          .product-bundle-item__gallery img{
+              width: 100%;
+          }
+
+          .product-bundle-item__gallery .swiper-button-prev,
+          .product-bundle-item__gallery .swiper-button-next{
+              color: #000;
+              width: 20px;
+              height: 20px;
+              background-color: white;
+              border-radius: 50%;
+              padding: 5px;
+              display: none;
+              transition: all 0.3s ease;
+          }
+
+          .product-bundle-item__gallery:hover .swiper-button-prev,
+          .product-bundle-item__gallery:hover .swiper-button-next{
+            display: flex;
+            transition: all 0.3s ease;
+          }
+
+          .product-bundle-item__info-title{
+              margin-top: 0;
+              margin-bottom: 10px;
+          }
+
+          .product-bundle-item__info-title a{
+              color: black;
+              text-decoration: none;
+          }
+
+          .product-bundle-item__info-price{
+            margin-bottom: 10px;
+          }
+
+          .product-bundle-item__info-price .old-price{
+              text-decoration: line-through;
+              margin-left: 10px;
+              color: grey;
+          }
+
+          .bundle-swatch-picker{
+            border: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 0;
+          }
+
+          .bundle-selector-group .swatch-input__label{
+            width: 24px;
+            height: 24px;
+          }
+
+          .bundle-selector-group{
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            margin-bottom: 10px;
+          }
+
+          /* Swatch styles */
+            .swatch {
+              --swatch--size: var(--swatch-input--size, 4.4rem);
+              --swatch--border-radius: var(--swatch-input--border-radius, 50%);
+
+              display: block;
+              width: var(--swatch--size);
+              max-width: 100%;
+              aspect-ratio: 1 / 1;
+              background: var(--swatch--background);
+              background-position: var(--swatch-focal-point, initial);
+              background-size: cover;
+              background-origin: border-box;
+              border: 0.1rem solid rgba(var(--color-foreground), 0.15);
+              border-radius: var(--swatch--border-radius);
+            }
+
+            .swatch--square {
+              --swatch--border-radius: var(--swatch-input--border-radius, 0.2rem);
+            }
+
+            .swatch--unavailable {
+              border-style: dashed;
+              border-color: rgba(var(--color-foreground), 0.5);
+            }
+
+            /* swatch-input lives in its own file for reusability of the swatch in other areas than the product form context */
+            .swatch-input__input + .swatch-input__label {
+              --swatch-input--border-radius: 50%;
+              display: inline-block;
+              max-width: 100%;
+              border-radius: var(--swatch-input--border-radius);
+              cursor: pointer;
+              outline-offset: 0.2rem;
+              outline-color: transparent;
+              outline-style: solid;
+              transition-property: outline-color, outline-width, box-shadow;
+              transition-duration: var(--duration-short);
+              transition-timing-function: ease;
+              forced-color-adjust: none;
+            }
+
+            .swatch-input__input + .swatch-input__label.swatch-input__label--square {
+              --swatch-input--border-radius: 0.2rem;
+            }
+
+            /* Active state */
+            .swatch-input__input:active + .swatch-input__label,
+            .swatch-input__input:checked + .swatch-input__label {
+              outline: 0.1rem solid rgb(var(--color-foreground));
+            }
+
+            /* Hover state */
+            .swatch-input__input + .swatch-input__label:hover,
+            .swatch-input__input:hover + .swatch-input__label {
+              outline: 0.2rem solid rgba(var(--color-foreground), 0.4);
+            }
+
+            /* Focus visible */
+            .swatch-input__input:focus-visible + .swatch-input__label {
+              outline: 0.2rem solid rgba(var(--color-foreground), 0.5);
+              box-shadow: 0 0 0 0.2rem rgb(var(--color-background)), 0 0 0.1rem 0.5rem rgba(var(--color-foreground), 0.25);
+            }
+
+            /* Active and focused */
+            .swatch-input__input:active:focus-visible + .swatch-input__label,
+            .swatch-input__input:checked:focus-visible + .swatch-input__label {
+              outline: 0.1rem solid rgb(var(--color-foreground));
+              box-shadow: 0 0 0 0.2rem rgb(var(--color-background)), 0 0 0.1rem 0.4rem rgba(var(--color-foreground), 0.25);
+            }
+
+            /* Visually disabled */
+            .swatch-input__input.visually-disabled:not(:active):not(:checked) + .swatch-input__label {
+              transition: none;
+            }
+            .swatch-input__input.visually-disabled:not(:active):not(:checked) + .swatch-input__label:hover {
+              outline: none;
+            }
+
+            /* Actually disabled */
+            .swatch-input__input:disabled + .swatch-input__label {
+              pointer-events: none;
+            }
+
+            /* Overrides for swatch snippet when used inside disabled swatch-input */
+            .swatch-input__input:disabled + .swatch-input__label > .swatch,
+            .swatch-input__input.visually-disabled + .swatch-input__label > .swatch {
+              position: relative;
+              overflow: hidden;
+            }
+
+            /* Disabled styles */
+            .swatch-input__input:disabled + .swatch-input__label > .swatch,
+            .swatch-input__input.visually-disabled + .swatch-input__label > .swatch {
+              opacity: 0.4;
+            }
+
+            /* Display crossed out line over swatch when input is disabled */
+            .swatch-input__input:disabled + .swatch-input__label > .swatch::after,
+            .swatch-input__input.visually-disabled + .swatch-input__label > .swatch::after {
+              /* Diagonal of a square = length of the side * sqrt(2)  */
+              --diagonal--size: calc(var(--swatch-input--size) * 1.414);
+              --crossed-line--size: 0.1rem;
+              content: '';
+              position: absolute;
+              bottom: calc(var(--crossed-line--size) * -0.5);
+              left: 0;
+              width: var(--diagonal--size);
+              height: var(--crossed-line--size);
+              background-color: rgb(var(--color-foreground));
+              transform: rotate(-45deg);
+              transform-origin: left;
+            }
+
+            .visually-hidden {
+                position: absolute !important;
+                overflow: hidden;
+                width: 1px;
+                height: 1px;
+                margin: -1px;
+                padding: 0;
+                border: 0;
+                clip: rect(0 0 0 0);
+                word-wrap: normal !important;
+            }
+
+            *{
+              box-sizing: border-box;
+            }
+
+            /* Buttons */
+
+          .button, .shopify-challenge__button, .customer button, button.shopify-payment-button__button--unbranded {
+              min-width: calc(12rem + var(--buttons-border-width) * 2);
+              min-height: calc(4.5rem + var(--buttons-border-width) * 2);
+          }
+
+          .button, .shopify-challenge__button, .customer button, button.shopify-payment-button__button--unbranded {
+    --shadow-horizontal-offset: var(--buttons-shadow-horizontal-offset);
+    --shadow-vertical-offset: var(--buttons-shadow-vertical-offset);
+    --shadow-blur-radius
+5px
+: var(--buttons-shadow-blur-radius);
+    --shadow-opacity: var(--buttons-shadow-opacity);
+    --shadow-visible: var(--buttons-shadow-visible);
+    --border-offset: var(--buttons-border-offset);
+    --border-opacity: calc(1 - var(--buttons-border-opacity));
+    border-radius: var(--buttons-radius-outset);
+    position: relative;
+
+          }
+
+          .shopify-payment-button__button {
+    font-size: 1.5rem;
+    letter-spacing: .1rem;
+}
+
+.shopify-payment-button__button--unbranded {
+background-color: rgba(var(--color-button), var(--alpha-button-background));
+color: rgb(var(--color-button-text));
+font-size: 1.4rem;
+line-height: calc(1 + 0.2 / var(--font-body-scale));
+letter-spacing: 0.07rem;
+}
+
+.shopify-payment-button__button {
+font-family: inherit;
+min-height: 4.6rem;
+}
+
+.shopify-payment-button__button--unbranded:hover, .shopify-payment-button__button--unbranded:hover:not([disabled]) {
+background-color: rgba(var(--color-button), var(--alpha-button-background));
+}
+
+.shopify-payment-button__button--unbranded {
+padding: 1em 2em;
+}
+
+.shopify-payment-button__button {
+height: clamp(25px,var(--shopify-accelerated-checkout-button-block-size, 44px),55px);
+min-height: clamp(25px,var(--shopify-accelerated-checkout-button-block-size, 44px),55px);
+border-radius: var(--shopify-accelerated-checkout-button-border-radius, 0px);
+width: 100%;
+border: none;
+box-shadow: 0 0 0 0 transparent;
+color: #fff;
+cursor: pointer;
+display: block;
+font-size: 1em;
+font-weight: 500;
+line-height: 1;
+text-align: center;
+transition: background .2s ease-in-out;
+}
+</style>

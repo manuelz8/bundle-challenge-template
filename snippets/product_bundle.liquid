@@ -1,0 +1,150 @@
+{% assign bundle_product = block.settings.product %}
+
+{% if bundle_product %}
+    <bundle-product-card class="product-bundle-section"
+      id="bundle-{{ block.id }}" 
+      data-bundle-data-id="bundle-data-{{ block.id }}"
+    >
+      <template shadow-root-template>
+        {% render "swiper-styles" %}
+        {% render "product-bundle-styles" %}
+        
+        <h3 class="product-bundle-title">{{ block.settings.title }}</h3>
+        <div class="product-bundle-item">
+            <div class="product-bundle-item__gallery swiper-container" id="bundle-swiper-{{ block.id }}">
+                {% if bundle_product.images.size > 0 %}
+                    <div class="swiper-wrapper">
+                    {% for image in bundle_product.images %}
+                        <div class="swiper-slide">
+                            {{ image | image_url: width: 150, height: 150 | image_tag: loading: 'lazy' }}
+                        </div>
+                    {% endfor %}
+                    </div>
+                {% endif %}
+                <div class="swiper-button-prev"></div>
+                <div class="swiper-button-next"></div>
+            </div>
+            <div class="product-bundle-item__info">
+                <h3 class="product-bundle-item__info-title"><a href="{{ bundle_product.url }}">{{ bundle_product.title }}</a></h3>
+                <div class="product-bundle-item__info-price">
+                    <span class="price">
+                        {{ bundle_product.price | money }}
+                    </span>
+                    {% if bundle_product.price < bundle_product.compare_at_price %}
+                        <span class="old-price">
+                            {{ bundle_product.compare_at_price | money }}
+                        </span>
+                    {% endif %}
+                </div>
+                <div class="product-bundle-item__info-selectors">
+                  {% for option in bundle_product.options_with_values %}
+                      <div class="bundle-selector-group">
+                        
+                        <label 
+                          for="bundle-option-{{ option.position }}" 
+                          id="label-{{ option.position }}"
+                        >
+                          {{ option.name }}:
+                        </label>
+                        
+                        {% assign is_color = false %}
+                        {% liquid 
+                            assign option_name_handle = option.name | handle 
+                            if option_name_handle contains 'color' or option_name_handle contains 'colour'
+                            assign is_color = true
+                            endif
+                        %}
+
+                        {% if is_color %}
+                          
+                          <fieldset 
+                            class="js-bundle-selector bundle-swatch-picker"
+                            id="bundle-option-{{ option.position }}" 
+                            data-option-position="{{ option.position }}" 
+                            data-selector-type="swatch"
+                            role="radiogroup"                                   aria-labelledby="label-{{ option.position }}"
+                          >
+                            {% for value in option.values %}
+                              
+                              {%- liquid
+                                assign swatch_value = null
+                                if value.swatch.color
+                                  assign swatch_value = 'rgb(' | append: value.swatch.color.rgb | append: ')'
+                                endif
+                              -%}
+                              
+                              <input 
+                                type="radio" 
+                                id="bundle-swatch-{{ option.position }}-{{ forloop.index }}" 
+                                name="bundle-option-{{ option.position }}" 
+                                value="{{ value | escape }}"
+                                {% if option.selected_value == value %}
+                                  checked 
+                                  aria-checked="true"                            {% endif %}
+                                class="{% if swatch_value %}swatch-input__input{% else %}bundle-option-input{% endif %} visually-hidden"
+                              >
+                              <label 
+                                for="bundle-swatch-{{ option.position }}-{{ forloop.index }}"
+                                title="{{ value | escape }}"
+                                aria-label="{{ option.name }}: {{ value | escape }}" class="{% if swatch_value %}swatch-input__label{% else %} color-swatch{% endif %}"
+                                data-option-position="{{ option.position }}"
+                              >
+                                {% if swatch_value %}
+                                  <span class="swatch" style="--swatch--background: {{ swatch_value }};"></span>
+                                {% else %}
+                                  <span class="visually-hidden">{{ value | escape }}</span>
+                                {% endif %}
+                              </label>
+                              
+                            {% endfor %}
+                          </fieldset>
+                        {% else %}
+                            <select 
+                              id="bundle-option-{{ option.position }}" 
+                              class="js-bundle-selector bundle-option-dropdown" 
+                              data-option-position="{{ option.position }}"
+                              name="bundle-option-{{ option.position }}"
+                              aria-labelledby="label-{{ option.position }}"     >
+                              {% for value in option.values %}
+                                <option 
+                                  value="{{ value | escape }}"
+                                  {% if option.selected_value == value %}selected{% endif %}
+                                >
+                                  {{ value }}
+                                </option>
+                              {% endfor %}
+                            </select>
+                        {% endif %}
+                      </div>
+                  {% endfor %}
+                </div>
+                <input type="hidden" value="{{ bundle_product.selected_or_first_available_variant.id }}" class="bundle-variant-id-input">
+                <div class="product-bundle-item__info-buttons">
+                    <button 
+                        type="button" 
+                        class="shopify-payment-button__button shopify-payment-button__button--unbranded" 
+                        id="add-bundle-to-cart"
+                        aria-label="Add product bundle to cart for a 10 percent discount" {% if bundle_product.selected_or_first_available_variant.available == false %}
+                            disabled 
+                            aria-disabled="true"                                   {% else %}
+                            aria-disabled="false"
+                        {% endif %}
+                    >
+                        Add Bundle to Cart
+                    </button>
+                </div>
+            </div>
+        </div>
+      </template>
+      <script type="application/json" id="bundle-data-{{ block.id }}">
+          {
+            "mainVariantId": {{ current_product.selected_or_first_available_variant.id | json }},
+            "bundleVariants": {{ bundle_product.variants | json }},
+            "bundleOptions": {{ bundle_product.options_with_values | json }}
+          }
+      </script>      
+    </bundle-product-card>
+{% endif %}
+
+<script src="{{ 'bundle-product-card.js' | asset_url }}" defer></script>
+

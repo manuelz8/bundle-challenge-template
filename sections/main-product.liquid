@@ -89,6 +89,11 @@
             {%- case block.type -%}
               {%- when '@app' -%}
                 {% render block %}
+              {% when 'product_bundle' %}
+                  {%- render 'product_bundle',
+                    current_product: product,
+                    block: block
+                  -%}
               {%- when 'text' -%}
                 <p
                   class="product__text inline-richtext{% if block.settings.text_style == 'uppercase' %} caption-with-letter-spacing{% elsif block.settings.text_style == 'subtitle' %} subtitle{% endif %}"
@@ -732,6 +737,19 @@
   "blocks": [
     {
       "type": "@app"
+    },
+    {
+      "type": "product_bundle",
+      "name":  "Product Bundle",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Product",
+          "info": "Select the product to feature in this section."
+        }
+      ]
     },
     {
       "type": "text",
